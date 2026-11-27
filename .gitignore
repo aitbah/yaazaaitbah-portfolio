@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+
+# Environment (real values never leave the machine - see .env.example)
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Build output
+frontend/.next/
+frontend/out/
+backend/dist/
+shared/dist/
+
+# Uploaded files (served from a Docker volume, never committed)
+backend/uploads/
+
+# Tests
+coverage/
+frontend/e2e/.auth/
+frontend/test-results/
+frontend/playwright-report/
+
+# TypeScript
+*.tsbuildinfo
+frontend/next-env.d.ts
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+*.pem
+
+# Backups (the owner's real content - never committed)
+backups/
+
+# Personal content the seeder may read, such as a profile photo (never committed).
+private/*
+!private/.gitkeep
+

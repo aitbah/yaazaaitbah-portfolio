@@ -1,0 +1,31 @@
+{
+  "validation": {
+    "REQUIRED": "Ce champ est obligatoire.",
+    "INVALID_EMAIL": "Saisissez une adresse e-mail valide.",
+    "INVALID_URL": "Saisissez une URL valide.",
+    "INVALID_ID": "Cette référence n’est pas valide.",
+    "INVALID_CODE": "Un code ne peut contenir que des minuscules, des chiffres et des tirets.",
+    "INVALID_SLUG": "Une adresse ne peut contenir que des minuscules, des chiffres et des tirets.",
+    "NOT_FOUND": "L’une des sélections n’existe plus.",
+    "INVALID_INTEGER": "Saisissez un nombre entier.",
+    "TOO_BIG": "Cette valeur est trop longue.",
+    "TOO_SMALL": "Cette valeur est trop courte.",
+    "UNCHANGED": "C’est identique à la valeur actuelle.",
+    "MISMATCH": "Les deux saisies ne correspondent pas.",
+    "INVALID_VALUE": "Choisissez l’une des options proposées.",
+    "INVALID_KEY": "L’une des clés de langue n’est pas une locale valide.",
+    "ALREADY_EXISTS": "Ce nom est déjà utilisé.",
+    "CODE_TAKEN": "Ce code est déjà utilisé.",
+    "SLUG_TAKEN": "Un autre projet utilise déjà cette adresse.",
+    "URL_TAKEN": "Ce lien a déjà été ajouté.",
+    "INVALID_IMAGE": "Choisissez une image PNG, JPEG ou WebP.",
+    "IMAGE_TOO_LARGE": "L’image ne doit pas dépasser 2 Mo.",
+    "UNKNOWN": "Cette valeur n’est pas valide.",
+    "INVALID_MONTH": "Saisissez un mois, sous la forme d’une année et d’un mois.",
+    "BEFORE_START": "La fin ne peut pas précéder le début.",
+    "BEFORE_ISSUE": "L’expiration ne peut pas précéder la date de délivrance.",
+    "NOT_ALLOWED": "Ce champ ne s’applique pas ici.",
+    "INVALID_DOCUMENT": "Choisissez un fichier PDF.",
+    "DOCUMENT_TOO_LARGE": "Le fichier ne doit pas dépasser 5 Mo."
+  }
+}

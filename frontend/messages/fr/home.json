@@ -1,0 +1,103 @@
+{
+  "home": {
+    "skip": "Aller au contenu",
+    "nav": {
+      "label": "Sections",
+      "work": "Projets",
+      "expertise": "Expertise",
+      "path": "Parcours",
+      "record": "Certifications",
+      "contact": "Contact",
+      "top": "Retour en haut",
+      "menu": "Menu",
+      "close": "Fermer",
+      "talk": "Discutons"
+    },
+    "theme": {
+      "dark": "Sombre",
+      "light": "Clair",
+      "toDark": "Passer au thème sombre",
+      "toLight": "Passer au thème clair"
+    },
+    "cursor": {
+      "view": "Voir"
+    },
+    "hero": {
+      "basedIn": "Basé à",
+      "status": "Disponibilité",
+      "work": "Voir les projets",
+      "contact": "Me contacter"
+    },
+    "profile": {
+      "title": "À propos"
+    },
+    "work": {
+      "title": "Projets",
+      "more": "Autres projets",
+      "all": "Tous les projets",
+      "featured": "À la une",
+      "updated": "Mis à jour {date}",
+      "role": "Mon rôle",
+      "problem": "Le problème",
+      "approach": "L’approche",
+      "outcome": "Le résultat",
+      "stack": "Réalisé avec",
+      "images": "{count, plural, one {# image} other {# images}}",
+      "openImages": "Ouvrir les images de {title}",
+      "openImage": "Ouvrir l’image {number} : {alt}",
+      "live": "Voir le site",
+      "source": "Code source",
+      "back": "Tous les projets",
+      "close": "Fermer",
+      "previous": "Image précédente",
+      "next": "Image suivante",
+      "nextProject": "Projet suivant",
+      "read": "Lire l’étude"
+    },
+    "expertise": {
+      "title": "Expertise",
+      "skills": "Compétences",
+      "technologies": "Technologies",
+      "tools": "Outils",
+      "level": "{category}, niveau {level} sur 100",
+      "kinds": "Catégories"
+    },
+    "path": {
+      "title": "Parcours",
+      "experience": "Expérience",
+      "education": "Formation",
+      "present": "Aujourd’hui"
+    },
+    "record": {
+      "title": "Certifications",
+      "certification": "Certification",
+      "course": "Cours",
+      "expires": "Expire",
+      "id": "Identifiant",
+      "view": "Voir le certificat",
+      "languages": "Langues"
+    },
+    "contact": {
+      "title": "Contact",
+      "basedIn": "Basé à",
+      "status": "Statut",
+      "elsewhere": "Ailleurs",
+      "name": "Votre nom",
+      "senderEmail": "Votre e-mail",
+      "subject": "Objet",
+      "body": "Votre message",
+      "send": "Envoyer le message",
+      "sending": "Envoi…",
+      "sent": "Merci — votre message est envoyé. Je vous réponds bientôt.",
+      "another": "En écrire un autre",
+      "honeypot": "Laissez ce champ vide",
+      "updated": "Profil mis à jour {date}",
+      "cv": "Télécharger mon CV"
+    },
+    "footer": {
+      "cta": "Un projet en tête ?",
+      "write": "Travaillons ensemble",
+      "sections": "Explorer"
+    }
+  }
+}

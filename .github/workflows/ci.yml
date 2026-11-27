@@ -1,0 +1,125 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    # The suites that matter most talk to a real database rather than a mock,
+    # so CI provides one instead of letting them skip.
+    services:
+      mongo:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      # Installs every workspace and builds the shared package through its
+      # prepare script, which the other two compile against.
+      - run: npm ci
+
+      # Each gate is its own step, so each exit code is read on its own. A
+      # pipeline that swallowed one once reported a passing lint while ESLint
+      # was failing.
+      #
+      # `lint` generates the route types itself before running ESLint. It has
+      # to: `next-env.d.ts` imports `.next/dev/types/routes.d.ts`, which Git
+      # ignores, so on a fresh checkout `PageProps` and `LayoutProps` resolve to
+      # an error type and the typed rules fail on every page that uses them.
+      # This failed here on every push for days while passing on the machine it
+      # was written on, where the dev server had already written those files.
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run format:check
+
+      # Per package, because the configs and their exclusions are per package.
+      #
+      # The coverage flag is *not* repeated here. Each package's own `test`
+      # script is already `vitest run --coverage`, so passing it again produced
+      # `--coverage --coverage`, which vitest rejects outright:
+      # "Expected a single value for option --coverage, received [true, true]".
+      # Every one of these three steps failed on it. The thresholds are still
+      # enforced - by the script, which is also what a developer runs.
+      - run: npm test -w shared
+      - run: npm test -w backend
+      - run: npm test -w frontend
+
+      - run: npm run build
+
+  end-to-end:
+    runs-on: ubuntu-latest
+    needs: verify
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Start the stack
+        run: |
+          cp .env.example .env
+          # Values are throwaway: this stack is created and destroyed per run.
+          sed -i 's|^MONGO_URI=.*|MONGO_URI=mongodb://mongo:27017/portfolio|' .env
+          sed -i 's|^BACKEND_PORT=.*|BACKEND_PORT=5000|' .env
+          sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=http://localhost:3000|' .env
+          sed -i 's|^JWT_SECRET=.*|JWT_SECRET=ci-secret-value-with-at-least-32-chars|' .env
+          sed -i 's|^NEXT_PUBLIC_API_URL=.*|NEXT_PUBLIC_API_URL=http://localhost:5000|' .env
+          docker compose up -d --build
+
+      # `/api/health` and not a content route. This waited on `/api/profile`
+      # once, which throws NOT_FOUND until a profile exists - and the step that
+      # writes one is the *next* one. The gate waited for data produced by the
+      # step behind it, and every run timed out at exit 124 while the stack sat
+      # there healthy, logging a 404 every three seconds for five minutes.
+      - name: Wait for the stack
+        run: |
+          timeout 300 bash -c 'until curl -sf http://localhost:5000/api/health -o /dev/null; do sleep 3; done'
+          timeout 300 bash -c 'until curl -sf http://localhost:3000/en -o /dev/null; do sleep 3; done'
+
+      # The specs read real content: they assert that the languages page names
+      # Arabic, that the option lists hold what shipped, that projects exist to
+      # reorder. `global-setup` creates an admin and snapshots the database -
+      # it does not fill one, because on a developer's machine it is already
+      # full. In CI the stack starts empty, so nothing would match.
+      #
+      # Nothing before this run had ever reached this step: the job declares
+      # `needs: verify`, which failed on every push until the pipeline repair,
+      # and then the readiness gate above timed out.
+      - name: Fill the database
+        run: docker compose exec -T backend npm run db:seed
+
+      - run: npx playwright install --with-deps firefox
+        working-directory: frontend
+
+      - run: npm run test:e2e
+        working-directory: frontend
+
+      - if: failure()
+        run: docker compose logs --no-color
+
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-report
+          path: frontend/test-results

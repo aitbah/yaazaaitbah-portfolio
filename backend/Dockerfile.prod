@@ -1,0 +1,68 @@
+# Production image. Build context is the repository root, because this package
+# resolves `@portfolio/shared` through the workspace.
+
+# --- build ------------------------------------------------------------------
+FROM node:24-alpine AS build
+
+WORKDIR /app
+
+COPY package.json package-lock.json .npmrc ./
+COPY shared/package.json shared/
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+
+RUN npm ci --ignore-scripts \
+    --include-workspace-root \
+    --workspace shared \
+    --workspace backend
+
+COPY shared/ shared/
+COPY backend/ backend/
+
+RUN npm run build --workspace shared \
+    && npm run build --workspace backend
+
+# --- runtime dependencies ---------------------------------------------------
+# A second install rather than pruning the first: `npm prune` leaves the tree it
+# started with, and this one has never seen a dev dependency.
+FROM node:24-alpine AS deps
+
+WORKDIR /app
+
+COPY package.json package-lock.json .npmrc ./
+COPY shared/package.json shared/
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+
+RUN npm ci --omit=dev --ignore-scripts \
+    --include-workspace-root \
+    --workspace shared \
+    --workspace backend
+
+# --- run --------------------------------------------------------------------
+FROM node:24-alpine AS run
+
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+# `node` exists in this image already; it owns only what it has to write to.
+# One tree: the workspace hoists every dependency to the root, and Node's
+# resolution walks up to it from /app/backend.
+COPY --from=deps --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/shared/dist ./shared/dist
+COPY --from=build --chown=node:node /app/shared/package.json ./shared/package.json
+COPY --from=build --chown=node:node /app/backend/dist ./backend/dist
+COPY --from=build --chown=node:node /app/backend/package.json ./backend/package.json
+COPY --chown=node:node package.json ./
+
+RUN mkdir -p /app/backend/uploads && chown -R node:node /app/backend/uploads
+
+USER node
+
+WORKDIR /app/backend
+
+EXPOSE 5000
+
+# No shell, so signals reach the process and it can shut down cleanly.
+CMD ["node", "dist/server.js"]

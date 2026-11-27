@@ -1,0 +1,11 @@
+{
+  "responses": {
+    "VALIDATION_ERROR": "Vérifiez les champs signalés, puis réessayez.",
+    "INVALID_CREDENTIALS": "Adresse e-mail ou mot de passe incorrect.",
+    "UNAUTHENTICATED": "Votre session a expiré. Veuillez vous reconnecter.",
+    "CONFLICT": "Cela entre en conflit avec un élément qui existe déjà.",
+    "TOO_MANY_REQUESTS": "Trop de tentatives. Patientez quelques minutes, puis réessayez.",
+    "SERVICE_UNAVAILABLE": "Le serveur ne peut pas faire cela pour le moment. Réessayez dans un instant.",
+    "UNKNOWN": "Une erreur est survenue. Veuillez réessayer."
+  }
+}

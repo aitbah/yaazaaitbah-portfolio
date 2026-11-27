@@ -1,0 +1,33 @@
+{
+  "site": {
+    "theme": {
+      "label": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "interfaceLanguage": {
+      "label": "Interface language"
+    },
+    "showMore": {
+      "status": "Showing {shown} of {total}",
+      "projects": "Show more projects",
+      "skills": "Show more skills",
+      "technologies": "Show more technologies",
+      "tools": "Show more tools",
+      "experience": "Show more experience",
+      "education": "Show more education",
+      "certifications": "Show more certifications",
+      "courses": "Show more courses",
+      "languages": "Show more languages",
+      "socialLinks": "Show more links",
+      "gallery": "Show more screens",
+      "options": "Show more options",
+      "messages": "Show more messages"
+    },
+    "notifications": {
+      "label": "Notifications",
+      "close": "Close"
+    }
+  }
+}

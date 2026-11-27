@@ -1,0 +1,11 @@
+{
+  "responses": {
+    "VALIDATION_ERROR": "Please check the highlighted fields and try again.",
+    "INVALID_CREDENTIALS": "Incorrect email or password.",
+    "UNAUTHENTICATED": "Your session has expired. Please sign in again.",
+    "CONFLICT": "That conflicts with something that already exists.",
+    "TOO_MANY_REQUESTS": "Too many attempts. Please wait a few minutes and try again.",
+    "SERVICE_UNAVAILABLE": "The server cannot do that right now. Please try again shortly.",
+    "UNKNOWN": "Something went wrong. Please try again."
+  }
+}

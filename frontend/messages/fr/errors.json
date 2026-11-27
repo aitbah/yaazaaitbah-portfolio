@@ -1,0 +1,10 @@
+{
+  "errors": {
+    "title": "Une erreur est survenue",
+    "description": "Cette page n’a pas pu être affichée. Réessayez : si le problème persiste, il vient de notre côté.",
+    "retry": "Réessayer",
+    "notFoundTitle": "Page introuvable",
+    "notFoundDescription": "Cette page n’existe pas, ou elle a été déplacée.",
+    "home": "Retour à l’accueil"
+  }
+}

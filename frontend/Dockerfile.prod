@@ -1,0 +1,64 @@
+# Production image. Build context is the repository root, because this package
+# resolves `@portfolio/shared` through the workspace.
+
+# --- build ------------------------------------------------------------------
+FROM node:24-alpine AS build
+
+WORKDIR /app
+
+COPY package.json package-lock.json .npmrc ./
+COPY shared/package.json shared/
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+
+RUN npm ci --ignore-scripts \
+    --include-workspace-root \
+    --workspace shared \
+    --workspace frontend
+
+COPY shared/ shared/
+COPY frontend/ frontend/
+
+# Baked into the bundle at build time, so they are build arguments rather than
+# runtime environment. Changing one means rebuilding, which is the true shape
+# of what `NEXT_PUBLIC_` means.
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
+# Also a build argument, and not obviously so: `next.config.ts` reads it to
+# build the `/uploads` rewrite, and `output: 'standalone'` freezes the resolved
+# rewrites into `required-server-files.json`. Setting it only at runtime leaves
+# `localhost:5000` baked in, which in this container is this container - so
+# every uploaded image 500s and the CV never downloads.
+ARG INTERNAL_API_URL
+ENV INTERNAL_API_URL=$INTERNAL_API_URL
+ENV NODE_ENV=production
+# Nothing phones home from a build.
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN npm run build --workspace shared \
+    && npm run build --workspace frontend
+
+# --- run --------------------------------------------------------------------
+FROM node:24-alpine AS run
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
+
+WORKDIR /app
+
+# `output: 'standalone'` traces exactly the files the server needs, so this
+# image carries no source tree and no full `node_modules`.
+COPY --from=build --chown=node:node /app/frontend/.next/standalone ./
+COPY --from=build --chown=node:node /app/frontend/.next/static ./frontend/.next/static
+COPY --from=build --chown=node:node /app/frontend/public ./frontend/public
+
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "frontend/server.js"]

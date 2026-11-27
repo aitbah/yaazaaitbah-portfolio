@@ -1,0 +1,28 @@
+# The build context is the repository root now, so everything the images must
+# not carry is listed once here.
+**/node_modules
+.git
+.github
+docs
+
+# Built on the host; the images build their own.
+shared/dist
+backend/dist
+frontend/.next
+frontend/out
+frontend/next-env.d.ts
+
+# Local-only artefacts.
+# `backups/` is a database export - every message and the admin's password
+# hash. No Dockerfile copies it (both name their directories rather than `.`),
+# but there is no reason to hand it to the daemon on every build either.
+backups
+**/coverage
+frontend/e2e/.auth
+frontend/test-results
+frontend/playwright-report
+backend/uploads
+.env
+.env.*
+!.env.example
+**/*.log

@@ -1,0 +1,33 @@
+{
+  "site": {
+    "theme": {
+      "label": "المظهر",
+      "system": "النظام",
+      "light": "فاتح",
+      "dark": "داكن"
+    },
+    "interfaceLanguage": {
+      "label": "لغة الواجهة"
+    },
+    "showMore": {
+      "status": "عرض {shown} من {total}",
+      "projects": "عرض المزيد من المشاريع",
+      "skills": "عرض المزيد من المهارات",
+      "technologies": "عرض المزيد من التقنيات",
+      "tools": "عرض المزيد من الأدوات",
+      "experience": "عرض المزيد من الخبرات",
+      "education": "عرض المزيد من المؤهلات",
+      "certifications": "عرض المزيد من الشهادات",
+      "courses": "عرض المزيد من الدورات",
+      "languages": "عرض المزيد من اللغات",
+      "socialLinks": "عرض المزيد من الروابط",
+      "gallery": "عرض المزيد من الصور",
+      "options": "عرض المزيد من الخيارات",
+      "messages": "عرض المزيد من الرسائل"
+    },
+    "notifications": {
+      "label": "الإشعارات",
+      "close": "إغلاق"
+    }
+  }
+}

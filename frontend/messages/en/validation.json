@@ -1,0 +1,31 @@
+{
+  "validation": {
+    "REQUIRED": "This field is required.",
+    "INVALID_EMAIL": "Enter a valid email address.",
+    "INVALID_URL": "Enter a valid URL.",
+    "INVALID_ID": "That reference is not valid.",
+    "INVALID_CODE": "A code may hold only lowercase letters, digits and dashes.",
+    "INVALID_SLUG": "An address may hold only lowercase letters, digits and dashes.",
+    "NOT_FOUND": "One of the selections no longer exists.",
+    "INVALID_INTEGER": "Enter a whole number.",
+    "TOO_BIG": "This value is too long.",
+    "TOO_SMALL": "This value is too small.",
+    "UNCHANGED": "This is the same as the current one.",
+    "MISMATCH": "The two entries do not match.",
+    "INVALID_VALUE": "Choose one of the available options.",
+    "INVALID_KEY": "One of the language keys is not a valid locale.",
+    "ALREADY_EXISTS": "That name is already taken.",
+    "CODE_TAKEN": "That code is already in use.",
+    "SLUG_TAKEN": "Another project already uses that address.",
+    "URL_TAKEN": "That link has already been added.",
+    "INVALID_IMAGE": "Choose a PNG, JPEG or WebP image.",
+    "IMAGE_TOO_LARGE": "Image must be 2 MB or smaller.",
+    "UNKNOWN": "This value is not valid.",
+    "INVALID_MONTH": "Enter a month, as a year and a month.",
+    "BEFORE_START": "The end cannot be before the start.",
+    "BEFORE_ISSUE": "The expiry cannot be before the issue date.",
+    "NOT_ALLOWED": "This field does not apply here.",
+    "INVALID_DOCUMENT": "Choose a PDF file.",
+    "DOCUMENT_TOO_LARGE": "The file must be 5 MB or smaller."
+  }
+}

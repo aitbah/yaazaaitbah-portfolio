@@ -1,0 +1,104 @@
+# The development stack. `docker-compose.prod.yml` is the production one and
+# keeps the bare `portfolio` project name it was deployed under.
+#
+# The name is not cosmetic: it prefixes the containers **and the volumes**.
+# Both files declared `portfolio`, so `mongo-data` and `uploads-data` here
+# resolved to `portfolio_mongo-data` and `portfolio_uploads-data` - the volumes
+# the live site keeps its database and its uploads in. On the server that runs
+# production, `docker compose up -d` with this file would have recreated the
+# running containers with development settings and mounted real data into them.
+name: portfolio-dev
+
+services:
+  mongo:
+    image: mongo:8
+    container_name: portfolio-dev-mongo
+    restart: unless-stopped
+    ports:
+      # Loopback only: this database has no authentication, and a port
+      # published on every interface is reachable from the whole network.
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - portfolio-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  backend:
+    build:
+      # The repository root: this package resolves `@portfolio/shared` through
+      # the npm workspace, which lives above it.
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: portfolio-dev-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      NODE_ENV: development
+    ports:
+      - "127.0.0.1:${BACKEND_PORT}:${BACKEND_PORT}"
+    volumes:
+      - ./backend:/app/backend
+      # Edited on the host, compiled by `npm run build -w shared`.
+      - ./shared:/app/shared
+      # The owner's personal content, Git-ignored: `db:seed` takes the profile
+      # photograph from it when it is there. Read-only - nothing in the
+      # container has any business writing there.
+      - ./private:/app/private:ro
+      # Keep the image's dependencies instead of the host's: the workspace
+      # hoists them to the root, and the host's native binaries are glibc
+      # while this image is musl.
+      - /app/node_modules
+      - /app/backend/node_modules
+      # Uploaded files outlive the container, like the database's data.
+      - uploads-data:/app/backend/uploads
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - portfolio-network
+
+  frontend:
+    build:
+      # The repository root, for the same reason as the backend.
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: portfolio-dev-frontend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      # Browser-side calls, so it resolves on the host rather than the network.
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      # Server-side calls from this container, which reach the backend by its
+      # service name - `localhost` here is this container, not the backend.
+      INTERNAL_API_URL: http://backend:${BACKEND_PORT}
+      # The site's own origin, for canonical URLs, hreflang and the sitemap.
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
+      # Hosts besides localhost allowed to load the dev server's scripts.
+      DEV_HOSTS: ${DEV_HOSTS:-}
+    ports:
+      # Loopback only, unless .env opens it to the home network (0.0.0.0).
+      - "${FRONTEND_BIND:-127.0.0.1}:3000:3000"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./shared:/app/shared
+      - /app/node_modules
+      - /app/frontend/node_modules
+      - /app/frontend/.next
+    depends_on:
+      - backend
+    networks:
+      - portfolio-network
+
+volumes:
+  mongo-data:
+  uploads-data:
+
+networks:
+  portfolio-network:
+    driver: bridge

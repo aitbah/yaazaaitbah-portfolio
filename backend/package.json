@@ -1,0 +1,47 @@
+{
+  "name": "portfolio-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "admin:create": "tsx src/features/auth/create-admin.ts",
+    "admin:email": "tsx src/features/auth/change-admin-email.ts",
+    "admin:password": "tsx src/features/auth/change-admin-password.ts",
+    "db:seed": "tsx src/seed/seed.ts",
+    "db:indexes": "tsx src/sync-indexes.ts",
+    "db:options": "tsx src/seed-options.ts",
+    "uploads:prune": "tsx src/prune-uploads.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/server.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.1.0",
+    "@portfolio/shared": "*",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
+    "jose": "^6.2.10",
+    "mongoose": "^9.9.3",
+    "nodemailer": "^10.0.1",
+    "pino": "^10.3.1",
+    "zod": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/supertest": "^7.2.1",
+    "pino-pretty": "^13.1.3",
+    "supertest": "^7.2.2",
+    "tsx": "^4.23.12"
+  }
+}

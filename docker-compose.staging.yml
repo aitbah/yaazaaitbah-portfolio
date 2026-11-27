@@ -1,0 +1,149 @@
+# Staging: the production build, on its own ports, for looking at before a
+# release goes live.
+#
+#   docker compose -f docker-compose.staging.yml --env-file .env.staging up -d --build
+#
+# It is the **production** Dockerfiles rather than the development ones on
+# purpose: a preview is only worth having if it is the artefact that will ship.
+# `next dev` renders differently, skips the optimiser and prerenders nothing.
+#
+# Isolated from production at every level that matters - its own project name,
+# its own volumes, its own database credentials - so nothing here can reach the
+# live site's data. Published on the loopback interface only: staging has no
+# TLS and its admin would otherwise be a sign-in form on plain HTTP.
+name: portfolio-staging
+
+services:
+  mongo:
+    image: mongo:8
+    restart: unless-stopped
+    # No published port, exactly as production. Reach it through the backend.
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME:?set in .env.staging}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:?set in .env.staging}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-portfolio_staging}
+      MONGO_APP_USERNAME: ${MONGO_APP_USERNAME:?set in .env.staging}
+      MONGO_APP_PASSWORD: ${MONGO_APP_PASSWORD:?set in .env.staging}
+    volumes:
+      - mongo-data:/data/db
+      - ./scripts/mongo-init-user.js:/docker-entrypoint-initdb.d/init-user.js:ro
+    networks:
+      - portfolio-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--username",
+          "${MONGO_ROOT_USERNAME}",
+          "--password",
+          "${MONGO_ROOT_PASSWORD}",
+          "--authenticationDatabase",
+          "admin",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.prod
+    restart: unless-stopped
+    env_file: .env.staging
+    environment:
+      NODE_ENV: production
+      # Nothing is in front of it here, so no forwarded address is believed.
+      TRUST_PROXY: "0"
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-5001}:${BACKEND_PORT:-5001}"
+    volumes:
+      - uploads-data:/app/backend/uploads
+      # The owner's own photograph, Git-ignored, so the seeded preview shows the
+      # real portrait rather than a generated placeholder. Read-only: nothing in
+      # this container has any business writing there.
+      - ./private:/app/private:ro
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - portfolio-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:' + (process.env.BACKEND_PORT || 5001) + '/api/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging: *logging
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.prod
+      args:
+        # Baked into the browser bundle, which is why staging needs an image of
+        # its own rather than production's: with production's value the contact
+        # form and the admin would call the live API from this preview.
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:?set in .env.staging}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:?set in .env.staging}
+        INTERNAL_API_URL: http://backend:${BACKEND_PORT:-5001}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      INTERNAL_API_URL: http://backend:${BACKEND_PORT:-5001}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3001}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - portfolio-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/robots.txt').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    logging: *logging
+    deploy:
+      resources:
+        limits:
+          memory: 640m
+
+volumes:
+  mongo-data:
+  uploads-data:
+
+networks:
+  portfolio-network:
+    driver: bridge

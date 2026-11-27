@@ -1,0 +1,64 @@
+# The edge, for a machine where this stack is the whole server. Caddy obtains
+# and renews the certificates itself; nothing here needs a cron job.
+#
+# A machine that already runs a proxy on 80 and 443 cannot use this - see
+# `scripts/Caddyfile.host`, which is the same two sites written for that Caddy.
+{
+	email {$ACME_EMAIL}
+}
+
+# Both hosts front the same two containers. `/uploads` is served from the volume
+# rather than through Node: these are static files, and Node has better things
+# to do than stream them.
+(portfolio_upstreams) {
+	handle_path /uploads/* {
+		root * /srv/uploads
+		# The headers the backend sets on these files (`app.ts`), which serving
+		# them from disk would otherwise drop.
+		header {
+			Cache-Control "public, max-age=2592000, immutable"
+			X-Content-Type-Options nosniff
+			Content-Security-Policy "default-src 'none'; img-src 'self'; sandbox"
+		}
+		@attachment path /resume/*
+		header @attachment Content-Disposition attachment
+		file_server
+	}
+
+	handle /api/* {
+		reverse_proxy backend:{$BACKEND_PORT}
+	}
+
+	handle {
+		reverse_proxy frontend:3000
+	}
+}
+
+{$SITE_DOMAIN} {
+	encode zstd gzip
+
+	# One canonical origin for the admin, so the session cookie has one home -
+	# and so the inbox link in a notification mail lands there too. The address
+	# is public either way: this is tidiness and SEO, not a lock.
+	@admin path_regexp ^/[a-z]{2}/admin(/|$)
+	redir @admin https://{$ADMIN_DOMAIN}{uri} permanent
+
+	import portfolio_upstreams
+}
+
+# The admin, on its own host so that its cookie is first-party there and the
+# public site never carries one. The browser bundle addresses the API by path
+# rather than by origin, which is what makes one build serve both names.
+{$ADMIN_DOMAIN} {
+	encode zstd gzip
+
+	header X-Robots-Tag "noindex, nofollow"
+
+	redir / /en/admin permanent
+
+	import portfolio_upstreams
+}
+
+www.{$SITE_DOMAIN} {
+	redir https://{$SITE_DOMAIN}{uri} permanent
+}

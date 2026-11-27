@@ -1,0 +1,570 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-heading: var(--font-heading);
+  --font-display: var(--font-display);
+  --color-site-bg: var(--site-bg);
+  --color-site-raise: var(--site-raise);
+  --color-site-fg: var(--site-fg);
+  --color-site-soft: var(--site-soft);
+  --color-site-muted: var(--site-muted);
+  --color-site-faint: var(--site-faint);
+  --color-site-line: var(--site-line);
+  --color-site-line-strong: var(--site-line-strong);
+  --color-site-red: var(--site-red);
+  --color-site-on-red: var(--site-on-red);
+  /* The public site's type scale: fluid, so one size reads at every width. */
+  --text-site-hero: clamp(4.25rem, 2rem + 9vw, 12.5rem);
+  --text-site-hero--line-height: 0.86;
+  --text-site-title: clamp(3.25rem, 1.4rem + 7vw, 9.5rem);
+  --text-site-title--line-height: 0.9;
+  --text-site-lead: clamp(1.875rem, 1.1rem + 2.6vw, 4rem);
+  --text-site-lead--line-height: 1.08;
+  --text-site-heading: clamp(1.75rem, 1.2rem + 1.7vw, 3.25rem);
+  --text-site-heading--line-height: 1.02;
+  --text-site-body: clamp(1rem, 0.95rem + 0.25vw, 1.1875rem);
+  --text-site-body--line-height: 1.6;
+  --text-site-label: 0.75rem;
+  --text-site-label--line-height: 1.4;
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* The public site's page margin. */
+  --site-pad: clamp(16px, 3.2vw, 52px);
+  /* The face is chosen by the document's `lang`, below. */
+  --font-sans:
+    var(--font-text-latin), ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-heading: var(--font-sans);
+  /* The public site's display serif; Arabic has its own (below). */
+  --font-display: var(--font-display-latin), Georgia, 'Times New Roman', serif;
+  --font-mono:
+    var(--font-mono-latin), ui-monospace, 'SFMono-Regular', Menlo, Consolas,
+    monospace;
+
+  /*
+    The public site, Signal, light: bone paper, warm ink, and one vermilion
+    that carries the identity. The photograph keeps its own colours.
+  */
+  --site-bg: oklch(0.958 0.013 82);
+  --site-raise: oklch(0.928 0.016 80);
+  --site-fg: oklch(0.18 0.008 55);
+  --site-soft: oklch(0.33 0.009 55);
+  --site-muted: oklch(0.5 0.012 60);
+  --site-faint: oklch(0.83 0.014 78);
+  --site-line: oklch(0.18 0.008 55 / 12%);
+  --site-line-strong: oklch(0.18 0.008 55 / 28%);
+  --site-red: oklch(0.6 0.215 31);
+  --site-on-red: oklch(0.16 0.012 40);
+
+  /* shadcn/ui's neutral theme for the radix-nova style, as the CLI writes it. */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  /* The public site, dark: warm ink, bone type, the same vermilion. */
+  --site-bg: oklch(0.155 0.007 55);
+  --site-raise: oklch(0.205 0.009 55);
+  --site-fg: oklch(0.94 0.014 82);
+  --site-soft: oklch(0.83 0.014 80);
+  --site-muted: oklch(0.64 0.012 70);
+  --site-faint: oklch(0.32 0.01 55);
+  --site-line: oklch(0.94 0.014 82 / 12%);
+  --site-line-strong: oklch(0.94 0.014 82 / 26%);
+  --site-red: oklch(0.6 0.215 31);
+  --site-on-red: oklch(0.16 0.012 40);
+
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+[lang='ar'] {
+  --font-sans:
+    var(--font-text-arabic), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-sans);
+  --font-display: var(--font-display-arabic), var(--font-text-arabic), serif;
+  /* The display's line in Arabic (`site-display`, with its descent), for what
+     is placed below it; the name a step smaller, its lines being taller. */
+  --display-leading: 1.4;
+  --text-site-hero: clamp(3.5rem, 1.6rem + 8vw, 11rem);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    /* Set, not left to the browser: its own dark-mode ink is slightly blue. */
+    @apply bg-background font-sans text-foreground;
+  }
+}
+
+/* --- The public site, Signal: what a utility class cannot spell. --- */
+
+/* A small label: the text face in tracked capitals - never tracked in Arabic, whose letters join. */
+@utility site-label {
+  font-family: var(--font-sans);
+  font-size: var(--text-site-label);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+
+  [lang='ar'] & {
+    font-size: 0.875rem;
+    letter-spacing: 0;
+  }
+}
+
+/* The display serif: tight, its optical size following its size. Arabic needs air above and below. */
+@utility site-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-optical-sizing: auto;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+
+  [lang='ar'] & {
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+}
+
+/* A photograph that still has its backdrop: its edges fall away, so it has no frame. */
+@utility figure-soft {
+  --fade: radial-gradient(70% 62% at 50% 40%, #000 60%, transparent 100%);
+  -webkit-mask-image: var(--fade);
+  mask-image: var(--fade);
+}
+
+/* An image revealed from its foot: the motion takes --reveal from 0 to 1. */
+@utility clip-reveal {
+  clip-path: inset(calc((1 - var(--reveal, 1)) * 100%) 0 0 0 round 20px);
+}
+
+/*
+  Links draw a red line in from the reading start and let it go at the other
+  end; a link already underlined redraws it; an arrow passes through. Hover
+  only where hovering is real; focus always.
+*/
+@utility link-line {
+  background-image: linear-gradient(var(--site-red), var(--site-red));
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-size: 0% 1.5px;
+  transition: background-size 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+
+  &:focus-visible {
+    background-position: 0% 100%;
+    background-size: 100% 1.5px;
+    outline: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background-position: 0% 100%;
+      background-size: 100% 1.5px;
+    }
+  }
+
+  [dir='rtl'] & {
+    background-position: 0% 100%;
+  }
+
+  [dir='rtl'] &:focus-visible {
+    background-position: 100% 100%;
+  }
+
+  @media (hover: hover) {
+    [dir='rtl'] &:hover {
+      background-position: 100% 100%;
+    }
+  }
+}
+
+@utility link-redraw {
+  background-image: linear-gradient(var(--site-red), var(--site-red));
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 100% 1.5px;
+
+  &:focus-visible {
+    animation: line-redraw 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+    outline: none;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      animation: line-redraw 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+  }
+
+  [dir='rtl'] & {
+    background-position: 100% 100%;
+  }
+
+  [dir='rtl'] &:focus-visible {
+    animation-name: line-redraw-rtl;
+  }
+
+  @media (hover: hover) {
+    [dir='rtl'] &:hover {
+      animation-name: line-redraw-rtl;
+    }
+  }
+}
+
+/* On an arrow inside a `group`: `--ay: -1` sends it up as well (↗). */
+@utility arrow-pass {
+  display: inline-block;
+
+  .group:focus-visible & {
+    animation: arrow-pass 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  @media (hover: hover) {
+    .group:hover & {
+      animation: arrow-pass 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+  }
+}
+
+/*
+  The first load's cover (features/site/loader). Shown only once its inline
+  script has set `data-loader` on <html>: a page read without scripts is never
+  covered. `quick` (a return to the page inside the site) shows no count;
+  `gone` is the cover giving way by itself. Plain rules, outside the layers.
+*/
+[data-site-loader] {
+  display: none;
+}
+
+html[data-loader] [data-site-loader] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: block;
+  /* A frame of the count restyles and lays out the cover alone. */
+  contain: strict;
+}
+
+html[data-loader='quick'] [data-loader-mark] {
+  visibility: hidden;
+}
+
+/* A return inside the site is covered in the page's own colour, not red. */
+html[data-loader='quick'] [data-loader-ground] {
+  background: var(--site-bg);
+}
+
+html[data-loader='gone'] [data-site-loader] {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+
+/* The count, from the script's `--loader-n`: 000 to 100. */
+@counter-style site-pad3 {
+  system: extends decimal;
+  pad: 3 '0';
+}
+
+.loader-count::after {
+  counter-reset: loader var(--loader-n, 0);
+  content: counter(loader, site-pad3);
+}
+
+/*
+  The cursor (features/site/site-cursor.tsx). The system pointer is hidden
+  only while the site's own is shown, and never over a field, an open dialog
+  (the top layer would cover the site's) or the theme change (a snapshot).
+*/
+html.cursor-on :is([data-cursor-dot], [data-cursor-ring]) {
+  display: block;
+}
+
+html.cursor-on [data-cursor-disc] {
+  display: grid;
+}
+
+html.cursor-on:is(:has(dialog:modal), .spill-in)
+  :is([data-cursor-dot], [data-cursor-ring], [data-cursor-disc]) {
+  visibility: hidden;
+}
+
+html.cursor-on:not(:has(dialog:modal), .spill-in),
+html.cursor-on:not(:has(dialog:modal), .spill-in)
+  :not(input, textarea, select, [contenteditable='true']) {
+  cursor: none !important;
+}
+
+/* The phone menu: red, from its top edge down; the sections rise into place. */
+.site-menu[open] {
+  animation: menu-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-menu[open] .site-menu-item > a {
+  animation: menu-item-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 160ms);
+}
+
+@keyframes menu-in {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes menu-item-in {
+  from {
+    translate: 0 110%;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+
+/* The companion floats, gently, while it is in view. */
+@keyframes companion-float {
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+.site-companion:not([data-away]) {
+  animation: companion-float 4.6s ease-in-out infinite;
+}
+
+/* Selection and the page's scrollbar in the site's own inks. */
+[data-site-root] ::selection {
+  background-color: var(--site-red);
+  color: var(--site-on-red);
+}
+
+html:has([data-site-root]) {
+  scrollbar-color: var(--site-faint) var(--site-bg);
+}
+
+/* Arrows travel toward where they point, mirrored when the page reads right to left. */
+[dir='rtl'] {
+  --arrow-dir: -1;
+}
+
+@keyframes arrow-pass {
+  0% {
+    translate: 0 0;
+    opacity: 1;
+  }
+  42% {
+    translate: calc(var(--ax, 1) * var(--arrow-dir, 1) * 150%)
+      calc(var(--ay, 0) * 150%);
+    opacity: 0;
+  }
+  43% {
+    translate: calc(var(--ax, 1) * var(--arrow-dir, 1) * -150%)
+      calc(var(--ay, 0) * -150%);
+    opacity: 0;
+  }
+  100% {
+    translate: 0 0;
+    opacity: 1;
+  }
+}
+
+@keyframes line-redraw {
+  0% {
+    background-position: 100% 100%;
+    background-size: 100% 1.5px;
+  }
+  45% {
+    background-position: 100% 100%;
+    background-size: 0% 1.5px;
+  }
+  55% {
+    background-position: 0% 100%;
+    background-size: 0% 1.5px;
+  }
+  100% {
+    background-position: 0% 100%;
+    background-size: 100% 1.5px;
+  }
+}
+
+@keyframes line-redraw-rtl {
+  0% {
+    background-position: 0% 100%;
+    background-size: 100% 1.5px;
+  }
+  45% {
+    background-position: 0% 100%;
+    background-size: 0% 1.5px;
+  }
+  55% {
+    background-position: 100% 100%;
+    background-size: 0% 1.5px;
+  }
+  100% {
+    background-position: 100% 100%;
+    background-size: 100% 1.5px;
+  }
+}
+
+/*
+  The theme change. The script holds the transition open and clips the new
+  theme to a circle growing from the switch, then ends it itself.
+*/
+html.spill-in::view-transition-old(root),
+html.spill-in::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html.spill-in::view-transition-new(root) {
+  z-index: 2;
+  animation: spill-hold 60s linear both;
+  clip-path: var(--spill-clip, none);
+}
+
+html.spill-in::view-transition-old(root) {
+  z-index: 1;
+}
+
+@keyframes spill-hold {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Near-zero rather than none: Radix waits on `animationend` to unmount. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    /* A surviving delay would leave staggered items invisible. */
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    /*
+      None at all, not near-zero: `transition-property` is `all` by default,
+      so a near-zero duration made every style change a transition, and code
+      that sets a size and measures it read the old one. Nothing here waits on
+      `transitionend`.
+    */
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}

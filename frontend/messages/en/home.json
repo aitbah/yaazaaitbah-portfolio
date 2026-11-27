@@ -1,0 +1,103 @@
+{
+  "home": {
+    "skip": "Skip to content",
+    "nav": {
+      "label": "Sections",
+      "work": "Work",
+      "expertise": "Expertise",
+      "path": "Experience",
+      "record": "Credentials",
+      "contact": "Contact",
+      "top": "Back to top",
+      "menu": "Menu",
+      "close": "Close",
+      "talk": "Let’s talk"
+    },
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "toDark": "Switch to the dark theme",
+      "toLight": "Switch to the light theme"
+    },
+    "cursor": {
+      "view": "View"
+    },
+    "hero": {
+      "basedIn": "Based in",
+      "status": "Availability",
+      "work": "See the work",
+      "contact": "Get in touch"
+    },
+    "profile": {
+      "title": "About"
+    },
+    "work": {
+      "title": "Work",
+      "more": "More work",
+      "all": "All work",
+      "featured": "Featured",
+      "updated": "Updated {date}",
+      "role": "My role",
+      "problem": "The problem",
+      "approach": "The approach",
+      "outcome": "The outcome",
+      "stack": "Built with",
+      "images": "{count, plural, one {# image} other {# images}}",
+      "openImages": "Open the images of {title}",
+      "openImage": "Open image {number}: {alt}",
+      "live": "Visit the site",
+      "source": "Source code",
+      "back": "All work",
+      "close": "Close",
+      "previous": "Previous image",
+      "next": "Next image",
+      "nextProject": "Next project",
+      "read": "Read the case"
+    },
+    "expertise": {
+      "title": "Expertise",
+      "skills": "Skills",
+      "technologies": "Technologies",
+      "tools": "Tools",
+      "level": "{category}, level {level} of 100",
+      "kinds": "Kinds"
+    },
+    "path": {
+      "title": "Experience",
+      "experience": "Experience",
+      "education": "Education",
+      "present": "Present"
+    },
+    "record": {
+      "title": "Credentials",
+      "certification": "Certification",
+      "course": "Course",
+      "expires": "Expires",
+      "id": "ID",
+      "view": "View the credential",
+      "languages": "Languages"
+    },
+    "contact": {
+      "title": "Contact",
+      "basedIn": "Based in",
+      "status": "Status",
+      "elsewhere": "Elsewhere",
+      "name": "Your name",
+      "senderEmail": "Your email",
+      "subject": "Subject",
+      "body": "Your message",
+      "send": "Send the message",
+      "sending": "Sending…",
+      "sent": "Thank you — your message is on its way. I’ll write back soon.",
+      "another": "Write another",
+      "honeypot": "Leave this field empty",
+      "updated": "Profile updated {date}",
+      "cv": "Download my CV"
+    },
+    "footer": {
+      "cta": "Have a project in mind?",
+      "write": "Let’s work together",
+      "sections": "Explore"
+    }
+  }
+}
